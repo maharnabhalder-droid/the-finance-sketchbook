@@ -4,6 +4,16 @@ All notable changes to **INKWELL** are documented in this file.
 
 ---
 
+## [1.3.0] - 2026-10-11 - Innovation & Creativity Pass
+### Added
+- **Command Palette (`CommandPalette.tsx`)**: Global `Ctrl+K` / `Cmd+K` keyboard shortcut modal with fuzzy search across chapters, quick actions, and instant simulation launches.
+- **Mindfulness & Regret Sentiment Tagging**: Added 3-tier sentiment selector (`worth_it`, `neutral`, `regret`) to `QuickAddExpenseModal` and typed in `lib/engine/types.ts`.
+- **Mindfulness Quotient Card**: Added high-satisfaction versus impulse-regret quotient analysis in Chapter 07 (`HealthInsightsPage.tsx`).
+- **Visual Sentiment Indicators**: Transaction list in Overview (Ch. 01) and Spending table (Ch. 02) display contextual sentiment badges.
+- **Zod Schema Tests**: Extended runtime validation tests in `lib/engine/__tests__/schemas.test.ts` for sentiment enum boundary enforcement.
+
+---
+
 ## [1.2.0] - 2026-10-11 - Quality Pass Architecture & Reliability
 ### Added
 - Standard Next.js route boundaries: `app/error.tsx`, `app/loading.tsx`, `app/not-found.tsx`.

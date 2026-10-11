@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BookOpen,
   Sliders,
@@ -19,6 +19,7 @@ import {
 import { useFinanceStore, LedgerPageId } from "../lib/store/useFinanceStore";
 import { QuickAddExpenseModal } from "./QuickAddExpenseModal";
 import { SettingsModal } from "./SettingsModal";
+import { CommandPalette } from "./CommandPalette";
 
 export function Navbar() {
   const currentDay = useFinanceStore((state) => state.currentDay);
@@ -36,7 +37,20 @@ export function Navbar() {
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
   const [isFastForwardOpen, setIsFastForwardOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [fastForwardDayInput, setFastForwardDayInput] = useState(currentDay);
+
+  // Global Ctrl+K / Cmd+K listener for Command Palette
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setIsCommandPaletteOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   const navItems: {
     id: LedgerPageId;
@@ -114,6 +128,20 @@ export function Navbar() {
 
           {/* Right: Controls & Day Counter */}
           <div className="flex items-center gap-2">
+            {/* Command Palette Trigger */}
+            <button
+              onClick={() => setIsCommandPaletteOpen(true)}
+              aria-label="Open Command Palette (Ctrl+K or Cmd+K)"
+              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-paper-border dark:border-ink-800 bg-white/70 dark:bg-ink-900/70 text-xs text-ink-500 hover:text-ink-900 dark:hover:text-ink-100 hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass min-h-[38px]"
+              title="Open Command Palette (Ctrl+K)"
+            >
+              <Search className="w-3.5 h-3.5 text-brass" aria-hidden="true" />
+              <span className="hidden xl:inline text-[11px]">Command</span>
+              <kbd className="text-[10px] font-mono px-1 py-0.5 rounded bg-black/5 dark:bg-white/10 border border-paper-border dark:border-ink-700">
+                ⌘K
+              </kbd>
+            </button>
+
             {/* Quick Add Expense button */}
             <button
               onClick={() => setIsQuickAddOpen(true)}
@@ -222,6 +250,14 @@ export function Navbar() {
           })}
         </nav>
       </header>
+
+      {/* Command Palette */}
+      <CommandPalette
+        isOpen={isCommandPaletteOpen}
+        onClose={() => setIsCommandPaletteOpen(false)}
+        onOpenQuickAdd={() => setIsQuickAddOpen(true)}
+        onOpenSettings={() => setIsSettingsOpen(true)}
+      />
 
       {/* Quick Add Expense Modal */}
       <QuickAddExpenseModal

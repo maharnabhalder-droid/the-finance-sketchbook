@@ -155,9 +155,21 @@ export function SpendingPage({ dayState }: SpendingPageProps) {
                       Day {tx.day}
                     </td>
                     <td className="py-3 px-4">
-                      <span className="font-semibold text-ink-900 dark:text-ink-100 block">
-                        {tx.title}
-                      </span>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="font-semibold text-ink-900 dark:text-ink-100">
+                          {tx.title}
+                        </span>
+                        {tx.sentiment === "worth_it" && (
+                          <span className="inline-flex items-center gap-0.5 text-[10px] px-1.5 py-0.5 rounded-full bg-sage/15 text-sage-dark dark:text-sage-light font-mono font-medium" title="Worth it">
+                            ✨ worth-it
+                          </span>
+                        )}
+                        {tx.sentiment === "regret" && (
+                          <span className="inline-flex items-center gap-0.5 text-[10px] px-1.5 py-0.5 rounded-full bg-vermilion/15 text-vermilion font-mono font-medium" title="Regret">
+                            💔 regret
+                          </span>
+                        )}
+                      </div>
                       {tx.note && (
                         <span className="text-[11px] text-ink-500 italic block">
                           "{tx.note}"

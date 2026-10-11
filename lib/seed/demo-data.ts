@@ -252,6 +252,7 @@ export const INITIAL_SEED_DATA: SeedData = {
       category: "Food & Dining",
       note: "Late study session snack",
       isEssential: false,
+      sentiment: "regret",
       createdAt: "2026-10-02T23:15:00Z",
     },
     {
@@ -262,6 +263,7 @@ export const INITIAL_SEED_DATA: SeedData = {
       category: "Academics & Books",
       note: "Physics practical notebook",
       isEssential: true,
+      sentiment: "worth_it",
       createdAt: "2026-10-03T11:00:00Z",
     },
     {
@@ -272,6 +274,7 @@ export const INITIAL_SEED_DATA: SeedData = {
       category: "Food & Dining",
       note: "Hostel kitchen essentials",
       isEssential: true,
+      sentiment: "worth_it",
       createdAt: "2026-10-03T19:30:00Z",
     },
     {
@@ -282,6 +285,7 @@ export const INITIAL_SEED_DATA: SeedData = {
       category: "Transport & Commute",
       note: "Late for tutorial quiz",
       isEssential: false,
+      sentiment: "neutral",
       createdAt: "2026-10-04T08:20:00Z",
     },
     {
@@ -292,6 +296,7 @@ export const INITIAL_SEED_DATA: SeedData = {
       category: "Food & Dining",
       note: "Evening discussion",
       isEssential: false,
+      sentiment: "worth_it",
       createdAt: "2026-10-04T17:00:00Z",
     },
     {
@@ -302,6 +307,7 @@ export const INITIAL_SEED_DATA: SeedData = {
       category: "Food & Dining",
       note: "Breakfast",
       isEssential: true,
+      sentiment: "worth_it",
       createdAt: "2026-10-05T09:00:00Z",
     },
     {
@@ -312,6 +318,7 @@ export const INITIAL_SEED_DATA: SeedData = {
       category: "Entertainment & Gaming",
       note: "Weekend matinee",
       isEssential: false,
+      sentiment: "worth_it",
       createdAt: "2026-10-06T15:00:00Z",
     },
     {
@@ -322,6 +329,7 @@ export const INITIAL_SEED_DATA: SeedData = {
       category: "Food & Dining",
       note: "Movie snack",
       isEssential: false,
+      sentiment: "regret",
       createdAt: "2026-10-06T16:45:00Z",
     },
     // Day 7: No-spend Sunday! (0 spends)
@@ -333,6 +341,7 @@ export const INITIAL_SEED_DATA: SeedData = {
       category: "Food & Dining",
       note: "Celebrated freelance ₹800 milestone",
       isEssential: false,
+      sentiment: "worth_it",
       createdAt: "2026-10-08T18:00:00Z",
     },
     {
@@ -343,6 +352,7 @@ export const INITIAL_SEED_DATA: SeedData = {
       category: "Transport & Commute",
       note: "Counter topup",
       isEssential: true,
+      sentiment: "neutral",
       createdAt: "2026-10-09T08:30:00Z",
     },
     {
@@ -353,6 +363,7 @@ export const INITIAL_SEED_DATA: SeedData = {
       category: "Health & Emergency",
       note: "Flu recovery supplies",
       isEssential: true,
+      sentiment: "worth_it",
       createdAt: "2026-10-09T19:00:00Z",
     },
     {
@@ -363,6 +374,7 @@ export const INITIAL_SEED_DATA: SeedData = {
       category: "Food & Dining",
       note: "Hostel wing dinner order",
       isEssential: false,
+      sentiment: "worth_it",
       createdAt: "2026-10-10T21:00:00Z",
     },
     {
@@ -373,6 +385,7 @@ export const INITIAL_SEED_DATA: SeedData = {
       category: "Shopping & Personal",
       note: "Campus daily wear",
       isEssential: false,
+      sentiment: "neutral",
       createdAt: "2026-10-11T14:30:00Z",
     },
     {

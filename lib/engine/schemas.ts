@@ -23,6 +23,7 @@ export const TransactionInputSchema = z.object({
   category: TransactionCategorySchema,
   note: z.string().max(200).optional(),
   isEssential: z.boolean().optional(),
+  sentiment: z.enum(["worth_it", "regret", "neutral"]).optional(),
 });
 
 export const SavingsGoalInputSchema = z.object({

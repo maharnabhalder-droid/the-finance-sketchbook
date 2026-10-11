@@ -29,6 +29,8 @@ export type SubscriptionCategory =
 
 export type RiskLevel = "Safe" | "Watch" | "Danger";
 
+export type ExpenseSentiment = "worth_it" | "regret" | "neutral";
+
 export interface Transaction {
   id: string;
   title: string;
@@ -38,6 +40,7 @@ export interface Transaction {
   note?: string;
   isEssential?: boolean;
   upiRef?: string;
+  sentiment?: ExpenseSentiment;
   createdAt: string;
 }
 

@@ -192,9 +192,17 @@ export function OverviewPage({ dayState }: OverviewPageProps) {
                 className="flex items-center justify-between p-2 rounded-lg hover:bg-black/5 dark:hover:bg-white/5 transition-colors text-xs"
               >
                 <div>
-                  <span className="font-medium text-ink-900 dark:text-ink-100 block truncate max-w-[190px]">
-                    {tx.title}
-                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-medium text-ink-900 dark:text-ink-100 truncate max-w-[170px]">
+                      {tx.title}
+                    </span>
+                    {tx.sentiment === "worth_it" && (
+                      <span className="text-[10px] text-sage-dark dark:text-sage-light" title="Worth it">✨</span>
+                    )}
+                    {tx.sentiment === "regret" && (
+                      <span className="text-[10px] text-vermilion" title="Regret">💔</span>
+                    )}
+                  </div>
                   <span className="text-[10px] text-ink-400 font-mono">
                     Day {tx.day} · {tx.category}
                   </span>

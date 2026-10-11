@@ -24,6 +24,17 @@ export function HealthInsightsPage({ dayState }: HealthInsightsPageProps) {
   const currentDay = useFinanceStore((state) => state.currentDay);
   const streakDays = useFinanceStore((state) => state.streakDays);
   const unlockedBadges = useFinanceStore((state) => state.unlockedBadges);
+  const transactions = useFinanceStore((state) => state.transactions);
+
+  const worthItSpend = transactions
+    .filter((t) => t.sentiment === "worth_it")
+    .reduce((sum, t) => sum + t.amount, 0);
+  const regretSpend = transactions
+    .filter((t) => t.sentiment === "regret")
+    .reduce((sum, t) => sum + t.amount, 0);
+  const totalTaggedSpend = worthItSpend + regretSpend;
+  const worthItRatio =
+    totalTaggedSpend > 0 ? Math.round((worthItSpend / totalTaggedSpend) * 100) : 100;
 
   const health = dayState.health;
 
@@ -243,6 +254,36 @@ export function HealthInsightsPage({ dayState }: HealthInsightsPageProps) {
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Innovation Feature: Gen Z Mindfulness & Regret Quotient */}
+      <div className="p-5 rounded-2xl bg-gradient-to-r from-sage/10 via-parchment-50 to-lavender/10 dark:from-sage/5 dark:via-ink-900 dark:to-lavender/5 border border-paper-border dark:border-ink-800 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span className="text-[10px] font-mono uppercase tracking-wider font-bold text-sage-dark dark:text-sage-light flex items-center gap-1 mb-1">
+            <Sparkles className="w-3.5 h-3.5" />
+            Mindfulness & Regret Quotient
+          </span>
+          <h4 className="font-serif font-bold text-sm text-ink-900 dark:text-ink-100">
+            {worthItRatio}% High-Satisfaction Choices
+          </h4>
+          <p className="text-xs text-ink-600 dark:text-ink-400 mt-0.5 max-w-xl">
+            You spent <strong>{formatINR(worthItSpend)}</strong> on purchases tagged as high-value / worth-it, compared to <strong>{formatINR(regretSpend)}</strong> on impulse regrets.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-3 shrink-0">
+          <div className="text-right">
+            <span className="text-xs font-mono font-bold text-sage-dark dark:text-sage-light block">
+              ✨ {formatINR(worthItSpend)} Worth-It
+            </span>
+            <span className="text-xs font-mono font-bold text-vermilion block">
+              💔 {formatINR(regretSpend)} Regret
+            </span>
+          </div>
+          <div className="w-14 h-14 rounded-full border-4 border-sage/40 flex items-center justify-center font-serif font-black text-sm text-ink-900 dark:text-ink-100 bg-white dark:bg-ink-900 shadow-inner">
+            {worthItRatio}%
+          </div>
         </div>
       </div>
 

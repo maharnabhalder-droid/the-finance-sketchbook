@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Plus, Zap, Check, Sparkles } from "lucide-react";
 import { useFinanceStore } from "../lib/store/useFinanceStore";
-import { ExpenseCategory } from "../lib/engine/types";
+import { ExpenseCategory, ExpenseSentiment } from "../lib/engine/types";
 import { formatINR } from "../lib/engine/finance";
 
 interface QuickAddModalProps {
@@ -42,6 +42,7 @@ export function QuickAddExpenseModal({ isOpen, onClose }: QuickAddModalProps) {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState<ExpenseCategory>("Food & Dining");
   const [isEssential, setIsEssential] = useState(false);
+  const [sentiment, setSentiment] = useState<ExpenseSentiment>("neutral");
   const [note, setNote] = useState("");
 
   if (!isOpen) return null;
@@ -61,12 +62,14 @@ export function QuickAddExpenseModal({ isOpen, onClose }: QuickAddModalProps) {
       category,
       note: note.trim() || undefined,
       isEssential,
+      sentiment,
     });
 
     // Reset and close
     setTitle("");
     setAmount("");
     setNote("");
+    setSentiment("neutral");
     onClose();
   };
 
@@ -203,6 +206,48 @@ export function QuickAddExpenseModal({ isOpen, onClose }: QuickAddModalProps) {
               onChange={(e) => setNote(e.target.value)}
               className="w-full px-3 py-1.5 text-xs rounded-lg border border-paper-border dark:border-ink-700 bg-parchment-50 dark:bg-ink-800 focus:outline-none focus:ring-2 focus:ring-brass/50 text-ink-900 dark:text-ink-100"
             />
+          </div>
+
+          {/* Mindfulness Sentiment Tag */}
+          <div>
+            <label className="block text-xs font-semibold text-ink-700 dark:text-ink-300 mb-1.5">
+              Mindfulness Sentiment (Did this feel worth it?)
+            </label>
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                type="button"
+                onClick={() => setSentiment("worth_it")}
+                className={`py-1.5 px-2 rounded-lg text-xs font-semibold border flex items-center justify-center gap-1.5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass ${
+                  sentiment === "worth_it"
+                    ? "bg-sage/20 border-sage text-sage-dark dark:text-sage-light shadow-sm"
+                    : "border-paper-border dark:border-ink-700 text-ink-500 hover:bg-black/5 dark:hover:bg-white/5"
+                }`}
+              >
+                <span>✨ Worth it</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setSentiment("neutral")}
+                className={`py-1.5 px-2 rounded-lg text-xs font-semibold border flex items-center justify-center gap-1.5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass ${
+                  sentiment === "neutral"
+                    ? "bg-brass/20 border-brass text-brass shadow-sm"
+                    : "border-paper-border dark:border-ink-700 text-ink-500 hover:bg-black/5 dark:hover:bg-white/5"
+                }`}
+              >
+                <span>😐 Neutral</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setSentiment("regret")}
+                className={`py-1.5 px-2 rounded-lg text-xs font-semibold border flex items-center justify-center gap-1.5 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass ${
+                  sentiment === "regret"
+                    ? "bg-vermilion/20 border-vermilion text-vermilion shadow-sm"
+                    : "border-paper-border dark:border-ink-700 text-ink-500 hover:bg-black/5 dark:hover:bg-white/5"
+                }`}
+              >
+                <span>💔 Regret</span>
+              </button>
+            </div>
           </div>
 
           {/* Essential Toggle */}

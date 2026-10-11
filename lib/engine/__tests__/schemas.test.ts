@@ -33,6 +33,24 @@ describe("Data Boundary Validation & Configuration Schemas", () => {
         category: "NonExistentCategory",
       });
       expect(invalidCategory.success).toBe(false);
+
+      const validWithSentiment = validateTransaction({
+        title: "Cold Brew Treat",
+        amount: 140,
+        day: 12,
+        category: "Food & Dining",
+        sentiment: "worth_it",
+      });
+      expect(validWithSentiment.success).toBe(true);
+
+      const invalidSentiment = validateTransaction({
+        title: "Test",
+        amount: 100,
+        day: 12,
+        category: "Food & Dining",
+        sentiment: "invalid_feeling" as unknown as "worth_it",
+      });
+      expect(invalidSentiment.success).toBe(false);
     });
 
     it("validates savings goal constraints and priority thresholds", () => {
