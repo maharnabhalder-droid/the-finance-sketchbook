@@ -76,8 +76,22 @@ export function QuickAddExpenseModal({ isOpen, onClose }: QuickAddModalProps) {
     setCategory(p.category);
   };
 
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="quick-add-title"
+    >
       <motion.div
         initial={{ opacity: 0, scale: 0.95, y: 15 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -87,18 +101,19 @@ export function QuickAddExpenseModal({ isOpen, onClose }: QuickAddModalProps) {
         {/* Top Header */}
         <div className="flex items-center justify-between border-b border-paper-border dark:border-ink-800 pb-3 mb-4">
           <div className="flex items-center gap-2">
-            <span className="w-7 h-7 rounded-full bg-saffron/15 text-saffron flex items-center justify-center text-sm font-bold">
+            <span className="w-7 h-7 rounded-full bg-saffron/15 text-saffron flex items-center justify-center text-sm font-bold" aria-hidden="true">
               ⚡
             </span>
-            <h3 className="font-serif text-lg font-bold text-ink-900 dark:text-ink-100">
+            <h3 id="quick-add-title" className="font-serif text-lg font-bold text-ink-900 dark:text-ink-100">
               Quick Log Expense (Day {currentDay})
             </h3>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-full hover:bg-black/5 dark:hover:bg-white/5 text-ink-400 hover:text-ink-700"
+            aria-label="Close quick log modal"
+            className="p-1.5 rounded-full hover:bg-black/5 dark:hover:bg-white/5 text-ink-400 hover:text-ink-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass min-h-[36px] min-w-[36px] flex items-center justify-center"
           >
-            <X className="w-4 h-4" />
+            <X className="w-4 h-4" aria-hidden="true" />
           </button>
         </div>
 

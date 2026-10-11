@@ -61,6 +61,14 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-parchment-100 dark:bg-ink-950 text-ink-900 dark:text-ink-50 transition-colors duration-300 relative selection:bg-brass selection:text-white pb-12">
+      {/* Skip to Main Content link for keyboard & screen reader a11y */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-brass focus:text-white focus:rounded-lg focus:shadow-2xl focus:font-bold focus:text-xs focus:ring-2 focus:ring-offset-2 focus:ring-brass"
+      >
+        Skip to main content
+      </a>
+
       {/* Brass Loupe Cursor Follower */}
       <TheLens />
 
@@ -68,7 +76,7 @@ export default function Home() {
       <Navbar />
 
       {/* Content View: Closed Sketchbook Landing or Open 3D Ledger */}
-      <div className="pt-2 sm:pt-4">
+      <div id="main-content" tabIndex={-1} className="pt-2 sm:pt-4 outline-none">
         {!isBookOpen ? (
           <LandingCover onOpenBook={openBook} />
         ) : (

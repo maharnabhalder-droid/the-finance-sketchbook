@@ -51,13 +51,14 @@ export function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-30 w-full backdrop-blur-md bg-parchment-50/90 dark:bg-ink-950/90 border-b border-paper-border dark:border-ink-800 transition-colors">
+      <header role="banner" className="sticky top-0 z-30 w-full backdrop-blur-md bg-parchment-50/90 dark:bg-ink-950/90 border-b border-paper-border dark:border-ink-800 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
           {/* Left: Serif Brand Wordmark */}
           <div className="flex items-center gap-3">
             <button
               onClick={() => setActivePage("overview")}
-              className="text-left group flex items-center gap-2.5"
+              aria-label="Go to Inkwell Daily Ledger Overview"
+              className="text-left group flex items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass rounded-lg"
             >
               <div className="w-8 h-8 rounded-lg bg-brass flex items-center justify-center text-white shadow-sm font-serif font-black text-lg">
                 I
@@ -74,14 +75,18 @@ export function Navbar() {
 
             {/* Streak Chip */}
             {streakDays > 0 && (
-              <span className="hidden md:inline-flex items-center gap-1 text-[11px] font-mono font-bold bg-sage-light dark:bg-sage-dark/40 text-sage-dark dark:text-sage-light px-2 py-0.5 rounded-full border border-sage/30">
+              <span
+                role="status"
+                aria-label={`${streakDays} days streak below safe daily allowance`}
+                className="hidden md:inline-flex items-center gap-1 text-[11px] font-mono font-bold bg-sage-light dark:bg-sage-dark/40 text-sage-dark dark:text-sage-light px-2 py-0.5 rounded-full border border-sage/30"
+              >
                 🔥 {streakDays}d Streak
               </span>
             )}
           </div>
 
           {/* Center: Main Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-1 bg-parchment-100/70 dark:bg-ink-900/70 p-1 rounded-xl border border-paper-border dark:border-ink-800">
+          <nav aria-label="Main Navigation" className="hidden lg:flex items-center gap-1 bg-parchment-100/70 dark:bg-ink-900/70 p-1 rounded-xl border border-paper-border dark:border-ink-800">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activePage === item.id;
@@ -89,13 +94,14 @@ export function Navbar() {
                 <button
                   key={item.id}
                   onClick={() => setActivePage(item.id)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                  aria-current={isActive ? "page" : undefined}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass ${
                     isActive
                       ? "bg-white dark:bg-ink-800 text-brass shadow-sm font-bold border border-paper-border dark:border-ink-700"
                       : "text-ink-600 dark:text-ink-400 hover:text-ink-900 dark:hover:text-ink-100 hover:bg-black/5 dark:hover:bg-white/5"
                   }`}
                 >
-                  <Icon className="w-3.5 h-3.5" />
+                  <Icon className="w-3.5 h-3.5" aria-hidden="true" />
                   <span>{item.label}</span>
                 </button>
               );
@@ -107,10 +113,11 @@ export function Navbar() {
             {/* Quick Add Expense button */}
             <button
               onClick={() => setIsQuickAddOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brass hover:bg-brass-dark text-white text-xs font-bold shadow-sm transition-all hover:scale-105"
+              aria-label="Add new UPI or cash expense"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brass hover:bg-brass-dark text-white text-xs font-bold shadow-sm transition-all hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-brass min-h-[38px]"
               title="Quick Log a UPI or cash expense"
             >
-              <Plus className="w-3.5 h-3.5" />
+              <Plus className="w-3.5 h-3.5" aria-hidden="true" />
               <span className="hidden sm:inline">Add Expense</span>
             </button>
 
@@ -118,7 +125,8 @@ export function Navbar() {
             <div className="flex items-center bg-white dark:bg-ink-900 border border-paper-border dark:border-ink-800 rounded-lg p-0.5 shadow-sm">
               <button
                 onClick={() => setIsFastForwardOpen(true)}
-                className="px-2.5 py-1 text-xs font-mono font-bold text-ink-800 dark:text-ink-200 hover:bg-black/5 dark:hover:bg-white/5 rounded transition-colors flex items-center gap-1"
+                aria-label={`Current simulation is on Day ${currentDay} of 30. Click to jump days.`}
+                className="px-2.5 py-1 text-xs font-mono font-bold text-ink-800 dark:text-ink-200 hover:bg-black/5 dark:hover:bg-white/5 rounded transition-colors flex items-center gap-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass"
                 title="Click to jump or fast-forward days"
               >
                 <span>Day {currentDay}/30</span>
@@ -126,46 +134,50 @@ export function Navbar() {
               <button
                 onClick={advanceToNextDay}
                 disabled={currentDay >= 30}
-                className="px-1.5 py-1 text-xs text-brass hover:bg-brass/10 rounded transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                aria-label="Advance to Next Day"
+                className="px-1.5 py-1 text-xs text-brass hover:bg-brass/10 rounded transition-colors disabled:opacity-30 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass"
                 title="Advance to Next Day"
               >
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-4 h-4" aria-hidden="true" />
               </button>
             </div>
 
             {/* The Lens Toggle */}
             <button
               onClick={toggleLens}
-              className={`p-2 rounded-lg border text-xs font-medium transition-colors ${
+              aria-label={isLensActive ? "The Lens formula inspector is enabled. Click to disable." : "The Lens formula inspector is disabled. Click to enable."}
+              className={`p-2 rounded-lg border text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass min-h-[36px] min-w-[36px] flex items-center justify-center ${
                 isLensActive
                   ? "bg-brass/15 text-brass border-brass/40 dark:bg-brass/25"
                   : "border-paper-border dark:border-ink-800 text-ink-500 hover:bg-black/5 dark:hover:bg-white/5"
               }`}
               title={isLensActive ? "The Lens Inspector is ON" : "Turn The Lens ON"}
             >
-              <Search className="w-4 h-4" />
+              <Search className="w-4 h-4" aria-hidden="true" />
             </button>
 
             {/* Theme Toggle (Parchment vs Midnight) */}
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-lg border border-paper-border dark:border-ink-800 text-ink-600 dark:text-ink-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+              aria-label={`Switch to ${theme === "parchment" ? "Midnight Ink" : "Parchment"} theme`}
+              className="p-2 rounded-lg border border-paper-border dark:border-ink-800 text-ink-600 dark:text-ink-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass min-h-[36px] min-w-[36px] flex items-center justify-center"
               title={`Switch to ${theme === "parchment" ? "Midnight Ink" : "Parchment"} theme`}
             >
               {theme === "parchment" ? (
-                <Moon className="w-4 h-4 text-ink-700" />
+                <Moon className="w-4 h-4 text-ink-700" aria-hidden="true" />
               ) : (
-                <Sun className="w-4 h-4 text-amber-300" />
+                <Sun className="w-4 h-4 text-amber-300" aria-hidden="true" />
               )}
             </button>
 
             {/* Settings Button */}
             <button
               onClick={() => setIsSettingsOpen(true)}
-              className="p-2 rounded-lg border border-paper-border dark:border-ink-800 text-ink-600 dark:text-ink-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+              aria-label="Open Ledger Settings, Accessibility, and Data Backup"
+              className="p-2 rounded-lg border border-paper-border dark:border-ink-800 text-ink-600 dark:text-ink-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass min-h-[36px] min-w-[36px] flex items-center justify-center"
               title="Ledger Settings & Data Backup"
             >
-              <Settings className="w-4 h-4" />
+              <Settings className="w-4 h-4" aria-hidden="true" />
             </button>
 
             {/* Reset Demo button */}
@@ -175,16 +187,17 @@ export function Navbar() {
                   resetToDemo();
                 }
               }}
-              className="p-2 rounded-lg border border-paper-border dark:border-ink-800 text-ink-400 hover:text-vermilion hover:bg-vermilion/10 transition-colors"
+              aria-label="Reset all 30 days data to default demo dataset"
+              className="p-2 rounded-lg border border-paper-border dark:border-ink-800 text-ink-400 hover:text-vermilion hover:bg-vermilion/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-vermilion min-h-[36px] min-w-[36px] flex items-center justify-center"
               title="Reset Demo Data"
             >
-              <RotateCcw className="w-4 h-4" />
+              <RotateCcw className="w-4 h-4" aria-hidden="true" />
             </button>
           </div>
         </div>
 
         {/* Mobile Navigation Bar */}
-        <div className="lg:hidden flex overflow-x-auto py-2 px-4 gap-1.5 border-t border-paper-border dark:border-ink-800 no-scrollbar">
+        <nav aria-label="Mobile Navigation" className="lg:hidden flex overflow-x-auto py-2 px-4 gap-1.5 border-t border-paper-border dark:border-ink-800 no-scrollbar">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = activePage === item.id;
@@ -203,7 +216,7 @@ export function Navbar() {
               </button>
             );
           })}
-        </div>
+        </nav>
       </header>
 
       {/* Quick Add Expense Modal */}

@@ -151,8 +151,38 @@ export function ForecastRiskPage({ dayState }: ForecastRiskPageProps) {
           </div>
         </div>
 
-        {/* Recharts Area Container */}
-        <div className="h-64 sm:h-72 w-full">
+        {/* Recharts Area Container with screen-reader accessible alternative */}
+        <div
+          role="region"
+          aria-label="30-day multi-cone runway balance forecast chart"
+          tabIndex={0}
+          className="h-64 sm:h-72 w-full relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass rounded-lg"
+        >
+          {/* Hidden accessible data table for screen reader users */}
+          <table className="sr-only">
+            <caption>Day-by-Day Balance Trajectory (Best, Expected, and Worst Cones)</caption>
+            <thead>
+              <tr>
+                <th scope="col">Day</th>
+                <th scope="col">Actual Balance</th>
+                <th scope="col">Expected Forecast</th>
+                <th scope="col">Best Case</th>
+                <th scope="col">Worst Case</th>
+              </tr>
+            </thead>
+            <tbody>
+              {chartData.map((row) => (
+                <tr key={row.day}>
+                  <td>Day {row.dayNum}</td>
+                  <td>{row.actual !== null ? `₹${row.actual}` : "Future"}</td>
+                  <td>₹{row.expected}</td>
+                  <td>₹{row.best}</td>
+                  <td>₹{row.worst}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <defs>

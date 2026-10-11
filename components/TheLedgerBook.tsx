@@ -170,6 +170,8 @@ export function TheLedgerBook() {
                 data-lens-formula="(Remaining Balance - Total Reserved) ÷ Days Remaining"
                 data-lens-value={`${formatINR(dayState.safeDailyAllowance)}/day`}
                 data-lens-explanation="Your real disposable ceiling for today. Spend less than this and your runway extends; spend more and your allowance for tomorrow drops."
+                aria-live="polite"
+                aria-atomic="true"
               >
                 <span className="text-[11px] uppercase tracking-wider font-mono font-bold text-ink-400 block mb-1">
                   Safe Daily Allowance

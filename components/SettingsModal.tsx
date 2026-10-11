@@ -100,17 +100,30 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     reader.readAsText(file);
   };
 
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="settings-modal-title"
+    >
       <div className="w-full max-w-md bg-white dark:bg-ink-900 border-2 border-paper-border dark:border-ink-700/80 rounded-3xl shadow-2xl p-6 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-paper-border dark:border-ink-800 pb-3">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-brass/10 text-brass flex items-center justify-center font-bold">
+            <div className="w-8 h-8 rounded-lg bg-brass/10 text-brass flex items-center justify-center font-bold" aria-hidden="true">
               <SettingsIcon className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="font-serif text-lg font-bold text-ink-900 dark:text-ink-50">
+              <h3 id="settings-modal-title" className="font-serif text-lg font-bold text-ink-900 dark:text-ink-50">
                 Ledger Settings
               </h3>
               <span className="text-[10px] font-mono uppercase tracking-wider text-ink-400">
@@ -121,7 +134,8 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
           <button
             onClick={onClose}
-            className="text-ink-400 hover:text-ink-900 dark:hover:text-ink-100 text-lg p-1"
+            aria-label="Close settings dialog"
+            className="text-ink-400 hover:text-ink-900 dark:hover:text-ink-100 text-lg p-1.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brass min-h-[36px] min-w-[36px] flex items-center justify-center"
           >
             ✕
           </button>
