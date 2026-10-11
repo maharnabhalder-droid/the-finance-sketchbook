@@ -28,26 +28,34 @@ export function TheLens() {
       return;
     }
 
+    let animationFrameId: number;
+
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = requestAnimationFrame(() => {
+        setMousePos({ x: e.clientX, y: e.clientY });
 
-      // Check if hovering an element with data-lens-title
-      const target = (e.target as HTMLElement).closest("[data-lens-title]");
-      if (target) {
-        const title = target.getAttribute("data-lens-title") || "";
-        const formula = target.getAttribute("data-lens-formula") || "";
-        const explanation = target.getAttribute("data-lens-explanation") || "";
-        const currentValue = target.getAttribute("data-lens-value") || "";
+        // Check if hovering an element with data-lens-title
+        const target = (e.target as HTMLElement)?.closest?.("[data-lens-title]");
+        if (target) {
+          const title = target.getAttribute("data-lens-title") || "";
+          const formula = target.getAttribute("data-lens-formula") || "";
+          const explanation = target.getAttribute("data-lens-explanation") || "";
+          const currentValue = target.getAttribute("data-lens-value") || "";
 
-        setLensData({ title, formula, explanation, currentValue });
-        setIsHoveringTarget(true);
-      } else {
-        setIsHoveringTarget(false);
-      }
+          setLensData({ title, formula, explanation, currentValue });
+          setIsHoveringTarget(true);
+        } else {
+          setIsHoveringTarget(false);
+        }
+      });
     };
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
   }, [isLensActive]);
 
   if (!isLensActive) {

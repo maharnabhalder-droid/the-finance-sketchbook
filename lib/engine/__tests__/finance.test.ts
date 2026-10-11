@@ -6,6 +6,9 @@ import {
   EngineInput,
 } from "../finance";
 import { Transaction, Commitment, Subscription, SavingsGoal } from "../types";
+import { INITIAL_SEED_DATA } from "../../seed/demo-data";
+import { GET as getSeedRoute } from "../../../app/api/seed/route";
+import { GET as getEventsRoute, POST as postEventsRoute } from "../../../app/api/events/route";
 
 describe("INKWELL Finance Engine", () => {
   const mockCommitments: Commitment[] = [
@@ -104,11 +107,6 @@ describe("INKWELL Finance Engine", () => {
 
       const state = computeDayState(input);
 
-      // Start: 10,000
-      // Spent: 60 + 320 = 380
-      // Paid Commitments: 0
-      // Moved to Goals: 1000
-      // Balance = 10,000 - 380 - 1000 = 8,620
       expect(state.totalSpent).toBe(380);
       expect(state.remainingBalance).toBe(8620);
       expect(state.isOverdraft).toBe(false);
@@ -126,16 +124,10 @@ describe("INKWELL Finance Engine", () => {
 
       const state = computeDayState(input);
 
-      // Unpaid Commitments: 239 + 600 = 839
-      // Active Subscriptions due before Day 30: 59 + 149 = 208
-      // Emergency Buffer: 10% of 10,000 = 1000
-      // Total Reserved: 839 + 208 + 1000 = 2047
       expect(state.unpaidCommitmentsTotal).toBe(839);
       expect(state.subscriptionsDueTotal).toBe(208);
       expect(state.emergencyBuffer).toBe(1000);
       expect(state.totalReserved).toBe(2047);
-
-      // Safe daily allowance = (8620 - 2047) / (30 - 3 + 1) = 6573 / 28 = ~235
       expect(state.safeDailyAllowance).toBe(Math.round(6573 / 28));
       expect(state.safeDailyAllowance).toBeGreaterThan(200);
     });
@@ -207,11 +199,8 @@ describe("INKWELL Finance Engine", () => {
         },
       ]);
 
-      // Before vs after balance diff
       expect(diff.deltas.remainingBalance).toBe(-1500);
-      // Safe daily allowance must drop
       expect(diff.deltas.safeDailyAllowance).toBeLessThan(0);
-      // Verdict must warn about trade-offs
       expect(diff.verdict.tradeOffs.length).toBeGreaterThan(0);
       expect(diff.verdict.alternatives.length).toBeGreaterThan(0);
     });
@@ -236,10 +225,89 @@ describe("INKWELL Finance Engine", () => {
         },
       ]);
 
-      // After state subscriptions due should be less
       expect(diff.after.subscriptionsDueTotal).toBeLessThan(diff.before.subscriptionsDueTotal);
-      // Safe daily allowance should increase or stay solid
       expect(diff.deltas.safeDailyAllowance).toBeGreaterThanOrEqual(0);
+    });
+  });
+
+  describe("Characterization & Determinism Locks (Golden Rule 3)", () => {
+    it("locks initial demo state calculations to prevent regression", () => {
+      const state = computeDayState({
+        currentDay: INITIAL_SEED_DATA.currentDay,
+        startBudget: INITIAL_SEED_DATA.startBudget,
+        transactions: INITIAL_SEED_DATA.transactions,
+        commitments: INITIAL_SEED_DATA.commitments,
+        subscriptions: INITIAL_SEED_DATA.subscriptions,
+        goals: INITIAL_SEED_DATA.goals,
+        incomeEvents: INITIAL_SEED_DATA.incomeEvents,
+        unexpectedEvents: INITIAL_SEED_DATA.unexpectedEvents,
+      });
+
+      // Verify seed state determinism
+      expect(state.currentDay).toBe(12);
+      expect(state.totalDays).toBe(30);
+      expect(state.startBudget).toBe(10000);
+      expect(state.remainingBalance).toBeGreaterThan(0);
+      expect(state.safeDailyAllowance).toBeGreaterThan(0);
+      expect(state.runwayDays).toBeGreaterThan(0);
+      expect(state.forecastPoints.length).toBe(30);
+      expect(state.goalProjections.length).toBeGreaterThanOrEqual(1);
+      expect(state.health.score).toBeGreaterThan(0);
+      expect(state.health.score).toBeLessThanOrEqual(100);
+      expect(["Safe", "Watch", "Danger"]).toContain(state.risk.level);
+    });
+
+    it("locks 3-cone forecast trajectory monotonicity", () => {
+      const state = computeDayState({
+        currentDay: 12,
+        startBudget: 10000,
+        transactions: mockTransactions,
+        commitments: mockCommitments,
+        subscriptions: mockSubscriptions,
+        goals: mockGoals,
+      });
+
+      const day30Forecast = state.forecastPoints[29];
+      expect(day30Forecast.day).toBe(30);
+      // Best case must be >= expected case >= worst case
+      expect(day30Forecast.bestCaseBalance).toBeGreaterThanOrEqual(day30Forecast.expectedBalance);
+      expect(day30Forecast.expectedBalance).toBeGreaterThanOrEqual(day30Forecast.worstCaseBalance);
+    });
+  });
+
+  describe("API Route Handlers Smoke Tests", () => {
+    it("GET /api/seed responds with HTTP 200 and demo data", async () => {
+      const response = await getSeedRoute();
+      expect(response.status).toBe(200);
+      const json = await response.json();
+      expect(json.status).toBe("success");
+      expect(json.data.startBudget).toBe(10000);
+      expect(json.data.currentDay).toBe(12);
+    });
+
+    it("GET /api/events responds with unexpected events list", async () => {
+      const response = await getEventsRoute();
+      expect(response.status).toBe(200);
+      const json = await response.json();
+      expect(json.status).toBe("success");
+      expect(Array.isArray(json.events)).toBe(true);
+    });
+
+    it("POST /api/events creates an event simulation", async () => {
+      const mockReq = new Request("http://localhost:3000/api/events", {
+        method: "POST",
+        body: JSON.stringify({
+          title: "Spilled Coffee on Textbook",
+          amount: 450,
+        }),
+      });
+
+      const response = await postEventsRoute(mockReq);
+      expect(response.status).toBe(200);
+      const json = await response.json();
+      expect(json.status).toBe("success");
+      expect(json.event.title).toBe("Spilled Coffee on Textbook");
+      expect(json.event.amount).toBe(450);
     });
   });
 });

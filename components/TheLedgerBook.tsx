@@ -18,15 +18,53 @@ import { formatINR } from "../lib/engine/finance";
 import { WaxSealStamp } from "./WaxSealStamp";
 import { MarginNote } from "./MarginNote";
 
-// Subpages
+import dynamic from "next/dynamic";
+
+// Initial page is kept eager for instant LCP on Chapter 01
 import { OverviewPage } from "./pages/OverviewPage";
-import { SpendingPage } from "./pages/SpendingPage";
-import { CommitmentsPage } from "./pages/CommitmentsPage";
-import { GoalsPage } from "./pages/GoalsPage";
-import { SimulatorPage } from "./pages/SimulatorPage";
-import { ForecastRiskPage } from "./pages/ForecastRiskPage";
-import { HealthInsightsPage } from "./pages/HealthInsightsPage";
-import { MonthEndReportCard } from "./pages/MonthEndReportCard";
+
+// Skeleton fallback to prevent layout shifts (CLS < 0.05)
+const PageSkeleton = () => (
+  <div className="space-y-4 animate-pulse p-4" aria-busy="true" aria-label="Loading page chapter">
+    <div className="h-7 bg-paper-border/40 dark:bg-ink-800 rounded-lg w-1/3" />
+    <div className="h-4 bg-paper-border/30 dark:bg-ink-800/60 rounded w-1/2" />
+    <div className="h-44 bg-paper-border/20 dark:bg-ink-800/40 rounded-xl" />
+    <div className="grid grid-cols-2 gap-3 pt-2">
+      <div className="h-28 bg-paper-border/20 dark:bg-ink-800/40 rounded-xl" />
+      <div className="h-28 bg-paper-border/20 dark:bg-ink-800/40 rounded-xl" />
+    </div>
+  </div>
+);
+
+// Heavy non-initial modules loaded lazily on demand
+const SpendingPage = dynamic(
+  () => import("./pages/SpendingPage").then((mod) => mod.SpendingPage),
+  { loading: () => <PageSkeleton />, ssr: false }
+);
+const CommitmentsPage = dynamic(
+  () => import("./pages/CommitmentsPage").then((mod) => mod.CommitmentsPage),
+  { loading: () => <PageSkeleton />, ssr: false }
+);
+const GoalsPage = dynamic(
+  () => import("./pages/GoalsPage").then((mod) => mod.GoalsPage),
+  { loading: () => <PageSkeleton />, ssr: false }
+);
+const SimulatorPage = dynamic(
+  () => import("./pages/SimulatorPage").then((mod) => mod.SimulatorPage),
+  { loading: () => <PageSkeleton />, ssr: false }
+);
+const ForecastRiskPage = dynamic(
+  () => import("./pages/ForecastRiskPage").then((mod) => mod.ForecastRiskPage),
+  { loading: () => <PageSkeleton />, ssr: false }
+);
+const HealthInsightsPage = dynamic(
+  () => import("./pages/HealthInsightsPage").then((mod) => mod.HealthInsightsPage),
+  { loading: () => <PageSkeleton />, ssr: false }
+);
+const MonthEndReportCard = dynamic(
+  () => import("./pages/MonthEndReportCard").then((mod) => mod.MonthEndReportCard),
+  { loading: () => <PageSkeleton />, ssr: false }
+);
 
 const PAGES_ORDER: { id: LedgerPageId; title: string; chapter: string }[] = [
   { id: "overview", title: "Daily Ledger & Cashflow", chapter: "01" },
