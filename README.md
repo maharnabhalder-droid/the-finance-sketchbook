@@ -3,6 +3,8 @@
 > **"Simulate every rupee before you commit it."**  
 > A tactile, editorial financial ledger where Indian Gen Z manages a limited **₹10,000 budget over 30 days**. Built with Next.js, TypeScript, Tailwind CSS, Framer Motion, and pure unit-tested mathematical models.
 
+🌐 **Live Deployed App**: [https://the-finance-sketchbook.vercel.app/](https://the-finance-sketchbook.vercel.app/)
+
 ---
 
 ## ⚡ Quick Start

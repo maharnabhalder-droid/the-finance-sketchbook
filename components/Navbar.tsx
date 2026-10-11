@@ -14,9 +14,11 @@ import {
   FastForward,
   ChevronRight,
   ShieldAlert,
+  Settings,
 } from "lucide-react";
 import { useFinanceStore, LedgerPageId } from "../lib/store/useFinanceStore";
 import { QuickAddExpenseModal } from "./QuickAddExpenseModal";
+import { SettingsModal } from "./SettingsModal";
 
 export function Navbar() {
   const currentDay = useFinanceStore((state) => state.currentDay);
@@ -33,6 +35,7 @@ export function Navbar() {
 
   const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
   const [isFastForwardOpen, setIsFastForwardOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [fastForwardDayInput, setFastForwardDayInput] = useState(currentDay);
 
   const navItems: { id: LedgerPageId; label: string; icon: any }[] = [
@@ -156,6 +159,15 @@ export function Navbar() {
               )}
             </button>
 
+            {/* Settings Button */}
+            <button
+              onClick={() => setIsSettingsOpen(true)}
+              className="p-2 rounded-lg border border-paper-border dark:border-ink-800 text-ink-600 dark:text-ink-300 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+              title="Ledger Settings & Data Backup"
+            >
+              <Settings className="w-4 h-4" />
+            </button>
+
             {/* Reset Demo button */}
             <button
               onClick={() => {
@@ -198,6 +210,12 @@ export function Navbar() {
       <QuickAddExpenseModal
         isOpen={isQuickAddOpen}
         onClose={() => setIsQuickAddOpen(false)}
+      />
+
+      {/* Settings Modal */}
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
       />
 
       {/* Fast Forward Modal */}
