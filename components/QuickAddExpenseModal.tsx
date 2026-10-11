@@ -45,8 +45,6 @@ export function QuickAddExpenseModal({ isOpen, onClose }: QuickAddModalProps) {
   const [sentiment, setSentiment] = useState<ExpenseSentiment>("neutral");
   const [note, setNote] = useState("");
 
-  if (!isOpen) return null;
-
   const numAmount = parseFloat(amount) || 0;
   const daysLeft = Math.max(1, 31 - currentDay);
   const allowanceImpactPerDay = Math.round(numAmount / daysLeft);
@@ -87,6 +85,8 @@ export function QuickAddExpenseModal({ isOpen, onClose }: QuickAddModalProps) {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
 
   return (
     <div

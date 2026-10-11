@@ -4,6 +4,15 @@ All notable changes to **INKWELL** are documented in this file.
 
 ---
 
+## [1.4.0] - 2026-10-11 - Code Quality & CI Pipeline Pass
+### Added
+- **ESLint Integration**: Added `.eslintrc.json` extending `next/core-web-vitals` with strict rules-of-hooks enforcement.
+- **Prettier Configuration**: Added `.prettierrc` enforcing consistent formatting across TypeScript and CSS files.
+- **GitHub Actions Automated CI**: Added `.github/workflows/ci.yml` verifying linting, type safety, Vitest unit tests, and Next.js production builds on push/PR.
+- **Hook Ordering Refactoring**: Fixed conditional hook ordering in `QuickAddExpenseModal.tsx` and `SettingsModal.tsx` to strictly obey React rules of hooks.
+
+---
+
 ## [1.3.0] - 2026-10-11 - Innovation & Creativity Pass
 ### Added
 - **Command Palette (`CommandPalette.tsx`)**: Global `Ctrl+K` / `Cmd+K` keyboard shortcut modal with fuzzy search across chapters, quick actions, and instant simulation launches.

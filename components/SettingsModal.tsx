@@ -33,8 +33,6 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [importStatus, setImportStatus] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  if (!isOpen) return null;
-
   // Export local state as JSON file
   const handleExportJSON = () => {
     const state = useFinanceStore.getState();
@@ -101,12 +99,15 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   };
 
   React.useEffect(() => {
+    if (!isOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onClose]);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
 
   return (
     <div

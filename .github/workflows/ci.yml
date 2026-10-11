@@ -1,0 +1,41 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - quality-pass
+  pull_request:
+    branches:
+      - main
+      - quality-pass
+
+jobs:
+  verify:
+    name: Lint, Test, Typecheck & Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run TypeScript Typecheck
+        run: npx tsc --noEmit
+
+      - name: Run Pure Engine Unit Tests
+        run: npx vitest run
+
+      - name: Verify Next.js Production Build
+        run: npm run build
