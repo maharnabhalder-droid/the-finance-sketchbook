@@ -38,7 +38,11 @@ export function Navbar() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [fastForwardDayInput, setFastForwardDayInput] = useState(currentDay);
 
-  const navItems: { id: LedgerPageId; label: string; icon: any }[] = [
+  const navItems: {
+    id: LedgerPageId;
+    label: string;
+    icon: React.ComponentType<{ className?: string; "aria-hidden"?: boolean | "true" | "false" }>;
+  }[] = [
     { id: "overview", label: "Notebook", icon: BookOpen },
     { id: "spending", label: "Spending", icon: TrendingUp },
     { id: "commitments", label: "Fixed Dues", icon: ShieldAlert },

@@ -14,6 +14,7 @@ import {
 } from "../engine/types";
 import { computeDayState, simulateScenario } from "../engine/finance";
 import { INITIAL_SEED_DATA } from "../seed/demo-data";
+import { FINANCE_CONFIG } from "../config/constants";
 
 export type LedgerPageId =
   | "overview"
@@ -483,8 +484,29 @@ export const useFinanceStore = create<FinanceStoreState>()(
       },
     }),
     {
-      name: "inkwell-finance-storage",
+      name: FINANCE_CONFIG.STORAGE_KEY,
+      version: FINANCE_CONFIG.STORE_VERSION,
       storage: createJSONStorage(() => localStorage),
+      migrate: (persistedState: unknown, version: number) => {
+        // Safe schema migration: if previous version or corrupt state, fallback cleanly
+        if (version === 0 || !persistedState || typeof persistedState !== "object") {
+          return {
+            startBudget: INITIAL_SEED_DATA.startBudget,
+            currentDay: INITIAL_SEED_DATA.currentDay,
+            transactions: INITIAL_SEED_DATA.transactions,
+            commitments: INITIAL_SEED_DATA.commitments,
+            subscriptions: INITIAL_SEED_DATA.subscriptions,
+            goals: INITIAL_SEED_DATA.goals,
+            incomeEvents: INITIAL_SEED_DATA.incomeEvents,
+            unexpectedEvents: INITIAL_SEED_DATA.unexpectedEvents,
+            theme: "parchment",
+            isLensActive: true,
+            streakDays: 3,
+            unlockedBadges: ["No-spend Sunday", "First Step"],
+          };
+        }
+        return persistedState;
+      },
       partialize: (state) => ({
         startBudget: state.startBudget,
         currentDay: state.currentDay,
